@@ -1,50 +1,48 @@
-#dev #react #go #mysql #docker  #docker-compose #nginx #logging #oauth #discord #t-rpg #trpg #ai
+## Complete Remaster of [Famyok](https://www.famyok.cz)
+It will be separated into:
+- Static [Promotional Website](#promotional-website)
+- React app ([The Game](#the-game))
+- [Admin Panel](#admin-panel)
+- [PhpMyAdmin](#phpmyadmin) for DB management
+- [Monitoring Panel](#monitoring-panel)
+- [Web Developer Environment](#web-developer-environment)
+
+The current data from the MySQL database will be migrated to the new one.  
+The design of websites and the app has to be reworked. New designs must be proposed.
+
+### To Discuss:
+- [ ] Propose to the community to come up with re-designs
+- [ ] Ask if the proposed infrastructure solution sounds good
 
 ---
-Complete remaster of game [Famyok](https://www.famyok.cz)
-It will be separated into:
-- Static [[#Promotional website]]
-- React app ([[#The Game]])
-- [[#Admin Panel]]
-- [[#PhpMyAdmin]] for DB management
-- [[#Monitoring Panel]]
-- [[#Web Developer Environment]]
-
-The current data from the current MySQL db will be migrated to the new db.
-The design of websites and app has to be reworked. New designs have to be proposed
-
-To discuss:
-- [ ] Propose to the community to come with re-designs
-- [ ] Ask if the came up infrastructure solution sounds good
 
 # Famyok Kolosus
 
 ## Interface
 
-### Promotional website
+### Promotional Website
 
-Similar to this layout, but a little bit more modern
-![[Pasted image 20250224055606.png]]
+Similar to this layout, but a bit more modern.  
+![Promotional Website](img/Pasted%20image%2020250224055606.png)
 
 ### The Game
 
-Similar to the [[#Promotional website]], but it will be distinct enough, so it'd be immersive for the player
-![[Pasted image 20250224055606.png]]
+Similar to the [Promotional Website](#promotional-website) but distinct enough to be immersive for the player.  
+![The Game](img/Pasted%20image%2020250224055606.png)
 
 ### Admin Panel
 
-New look, Something boring and simple. Just simple operations. To approve, modify, delete, create, view data
+New look—boring and simple. Just basic operations: approve, modify, delete, create, view data.
 
 ### PhpMyAdmin
 
-Similar to the already deployed MySQL management on forpsi, but newer
-![[2-29.png]]
+Similar to the already deployed MySQL management on Forpsi, but newer.  
+![PhpMyAdmin](img/2-29.png)
 
 ### Monitoring Panel
 
-Displaying current errors, bugs and events. What has changed, who has logged in and bunch more
-
-Once platform will be decided, there needs to be **someone who will make dashboards and monitoring  views**
+Displays current errors, bugs, events, changes, login activity, and more.  
+**Once a platform is decided, someone will need to create dashboards and monitoring views.**
 
 | Monitoring Tool    | Can Run Locally    | Resource Usage   | How to Run Locally      |
 | ------------------ | ------------------ | ---------------- | ----------------------- |
@@ -53,84 +51,88 @@ Once platform will be decided, there needs to be **someone who will make dashboa
 | **Graylog**        | Yes                | Moderate         | Docker Compose          |
 | **Splunk**         | Yes (Free Version) | High             | Docker                  |
 
+The logging server will likely be provided by **Fluentd**.  
+**There are multiple options:**
 
-Logging server will be provided by Fluentd probably
-**There multiple options:**
+---
 
 #### Loki
 
-![[grafana-2.png]]
+![Loki](img/grafana-2.png)
 
-- **Resource Usage**: Loki is lighter on resources compared to Elasticsearch, making it suitable for local setups. Grafana requires a bit more resources but is generally lightweight.
-- **Loki** is a log aggregation system optimized for Kubernetes, and **Grafana** is the visualization tool that allows you to query logs from Loki and visualize them alongside metrics.
-- **Fluentd Integration**: Fluentd can easily send logs to Loki using the **Loki** output plugin, which works well with Kubernetes and Docker-based environments.
-- **Easy setup**: Grafana and Loki are easy to configure, and you can visualize logs in Grafana alongside Prometheus metrics.
+- **Resource Usage:** Low to moderate.  
+- **Integration:** Fluentd can send logs to Loki using the **Loki** output plugin.  
+- **Visualization:** Grafana is used for visualizing logs and metrics.
 
-**Setup steps**:
+**Setup Steps:**
+1. Fluentd sends logs to Loki over HTTP.  
+2. Grafana queries Loki for logs and visualizations.
 
-- Fluentd sends logs to Loki over HTTP.
-- Grafana queries Loki for logs and visualizes them.
-
+---
 
 #### Elastic
 
-![[blog-elastic-discover-timestamps.png]]
+![Elastic](img/blog-elastic-discover-timestamps.png)
 
-- **Resource Usage**: Elasticsearch can be resource-intensive, especially with larger data volumes. It may require significant CPU and memory.
-- **Elasticsearch** stores and indexes your logs, while **Kibana** provides a web interface for querying and visualizing the data.
-- **Fluentd Integration**: Fluentd can easily send logs to Elasticsearch using the `elasticsearch` output plugin. It supports log indexing, querying, and visualizations through Kibana.
-- **Easy setup**: Fluentd has native support for sending logs to Elasticsearch, and Kibana is great for log exploration.
+- **Resource Usage:** Moderate to high.  
+- **Integration:** Fluentd can send logs to Elasticsearch using the `elasticsearch` output plugin.  
+- **Visualization:** Kibana for log exploration and dashboards.
 
-**Setup steps**:
+**Setup Steps:**
+1. Fluentd sends logs to Elasticsearch over HTTP.  
+2. Kibana provides real-time visualizations.
 
-- Fluentd sends logs to Elasticsearch over HTTP (port 9200).
-- Kibana queries Elasticsearch for logs and provides real-time visualizations and dashboards.
+---
 
 #### Graylog
 
-![[graylog-histogram.png]]
+![Graylog](img/graylog-histogram.png)
 
-- **Resource Usage**: Graylog is less resource-heavy than ELK, but still requires Elasticsearch and MongoDB, which can add to the system’s load.
-- **Graylog** is a centralized log management platform that collects, indexes, and analyzes log data from various sources.
-- **Fluentd Integration**: Fluentd can forward logs to Graylog using the **GELF** (Graylog Extended Log Format) output plugin. This allows you to send logs to Graylog over TCP or UDP.
-- **Easy setup**: Graylog has an easy-to-use interface with powerful searching and alerting features.
+- **Resource Usage:** Moderate. Requires **Elasticsearch** and **MongoDB**.  
+- **Integration:** Fluentd can forward logs to Graylog via the **GELF** output plugin.  
+- **Features:** Centralized log management with powerful search and alerting.
 
-**Setup steps**:
+**Setup Steps:**
+1. Fluentd sends logs to Graylog via GELF.  
+2. Graylog provides an interface for querying and visualization.
 
-- Fluentd sends logs to Graylog via the GELF protocol.
-- Graylog stores logs and provides an interface for querying and visualization.
+---
 
-####  Splunk
+#### Splunk
 
-![[im-hero-real-time-header.png]]
+![Splunk](img/im-hero-real-time-header.png)
 
-- **Resource Usage**: Splunk is more resource-intensive than other options due to the powerful indexing and searching capabilities.
-- **Splunk** is a powerful platform for machine data analytics, log management, and monitoring.
-- **Fluentd Integration**: Fluentd can send logs to Splunk via **HTTP Event Collector (HEC)** or **Splunk Forwarder**. The HEC allows logs to be ingested easily via HTTP POST requests.
-- **Easy setup**: Splunk provides a straightforward setup for log forwarding from Fluentd, and their interface is feature-rich with advanced search and analysis capabilities.
+- **Resource Usage:** High.  
+- **Integration:** Fluentd can send logs via **HTTP Event Collector (HEC)** or **Splunk Forwarder**.  
+- **Features:** Advanced search, analysis, and visualization.
 
-**Setup steps**:
+**Setup Steps:**
+1. Fluentd sends logs to Splunk via HEC.  
+2. Splunk processes logs for analysis.
 
-- Fluentd sends logs to Splunk via HEC (HTTP Event Collector).
-- Splunk processes logs and provides visualizations, search, and alerts.
-
+---
 
 ### Web Developer Environment
 
-Ability to modify the files of the servicies on the web, for quick fixes
+Ability to modify service files on the web for quick fixes.
 
+---
 
 ## Game
 
-Keep all the data from the current db, layout and lore
+Retain all data, layout, and lore from the current database.
+
+---
 
 ## Chat
 
-Utilize (one of them):
-- IRC [ergo](https://github.com/ergochat/ergo)
-- WebSockets [socket.io](https://github.com/googollee/go-socket.io)
+Utilize one of these:
+- **IRC:** [Ergo](https://github.com/ergochat/ergo)  
+- **WebSockets:** [socket.io](https://github.com/googollee/go-socket.io)  
 
-[How to run multiple servers in one process]https://medium.com/rungo/running-multiple-http-servers-in-go-d15300f4e59f()
+[How to Run Multiple Servers in One Process](https://medium.com/rungo/running-multiple-http-servers-in-go-d15300f4e59f)
+
+---
 
 ### IRC vs WebSockets
 
@@ -138,37 +140,30 @@ Utilize (one of them):
 |---------------------------------|------------|-----|
 | **Real-Time Communication**     | ✅ Yes (Low latency) | ✅ Yes (but uses polling) |
 | **Modern Web Support**          | ✅ Works in browsers natively | ❌ Requires an external IRC client or web gateway |
-| **Persistent Connection**       | ✅ Yes (keeps a connection open) | ✅ Yes (but may require rejoining channels) |
-| **Custom Features** (Emojis, Formatting, Bots, etc.) | ✅ Yes (Full control over features) | ⚠️ Limited, depends on the IRC server |
-| **Setup Complexity**            | ✅ Simple (Just use WebSockets API) | ❌ Complex (Need to host or connect to an IRC server) |
-| **Works on Mobile**             | ✅ Yes | ❌ Not well supported without extra clients |
-| **Security (Encryption, Auth, etc.)** | ✅ Supports **SSL/TLS encryption** | ⚠️ Often lacks modern security (some servers support SSL, but not all) |
-| **Offline Messages**            | ❌ No (Needs additional backend logic) | ⚠️ Only if using a bouncer (e.g., ZNC) |
-
-### **Why WebSockets is the Better Choice**
-
-✅ **Native Browser Support** – No need for external clients like an IRC client or a gateway.  
-✅ **Low Latency** – Messages are sent and received instantly, making it ideal for real-time chat.  
-✅ **Customization** – You can implement **custom commands, dice rolls, private messages, and game-specific features**.  
-✅ **Better Security** – Supports **TLS encryption**, unlike many traditional IRC servers.  
-✅ **Scalability** – Can be hosted on modern backend frameworks (**Node.js, Django, Laravel, etc.**).
+| **Persistent Connection**       | ✅ Yes | ✅ Yes (but may require rejoining channels) |
+| **Custom Features**             | ✅ Full control | ⚠️ Limited, depends on the IRC server |
+| **Setup Complexity**            | ✅ Simple | ❌ Complex |
+| **Mobile Support**              | ✅ Yes | ❌ Limited |
+| **Security (Encryption, Auth, etc.)** | ✅ Supports **SSL/TLS** | ⚠️ Limited support |
+| **Offline Messages**            | ❌ No | ⚠️ Requires a bouncer (e.g., ZNC) |
 
 ---
 
-### **When Would IRC Be Useful?**
+### **Why WebSockets is the Better Choice**
 
-❌ **If you want a public chat** across multiple communities.  
-❌ **If you prefer an existing chat infrastructure** instead of hosting your own server.  
-❌ **If you don't need in-game integration** (but this defeats the purpose in a TRPG app).
+- ✅ **Native Browser Support**  
+- ✅ **Low Latency**  
+- ✅ **Customization:** Custom commands, emojis, dice rolls, etc.  
+- ✅ **Better Security:** Supports **TLS encryption**  
+- ✅ **Scalability:** Works with modern backend frameworks.
 
-Since you’re making a TRPG **web app**, **WebSockets is the best choice** for **integrating chat into your game**. 🎲💬
+**Since you’re making a TRPG web app, WebSockets is the best choice.** 🎲💬
 
-Would you like a WebSocket chat example to get started? 🚀
-
+---
 
 ## New Features
 
-### Discord integration
+### Discord Integration
 
 ### AI
 
@@ -176,10 +171,9 @@ Would you like a WebSocket chat example to get started? 🚀
 
 #### AI Approval
 
-Character and image upload approval
+For character and image uploads.
 
 #### AI Lore
 
-AI specialized to create and expand on the current lore.
-Could help out the storyteller to come up with new scenarios.
-
+Specialized AI to create and expand the current lore.  
+**Can assist the storyteller in creating new scenarios.**
