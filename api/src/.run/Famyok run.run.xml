@@ -1,0 +1,7 @@
+﻿<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Famyok run" type="CompoundRunConfigurationType">
+    <toRun name="Famyok.IdentityProvider: http" type="LaunchSettings" />
+    <toRun name="Famyok: http" type="LaunchSettings" />
+    <method v="2" />
+  </configuration>
+</component>

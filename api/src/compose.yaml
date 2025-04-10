@@ -1,0 +1,66 @@
+﻿services:
+  api:
+    container_name: famyok-api
+    image: famyok.api
+    depends_on:
+      - db
+    ports:
+      - ${API_PORT}:${INTERNAL_API_PORT}
+    build:
+      context: Famyok
+    networks:
+      famyok-network:
+        aliases:
+          - ${API_NETWORK_ALIAS}
+    environment:
+      ASPNETCORE_URLS: http://0.0.0.0:${INTERNAL_API_PORT}
+#      IDENTITY_URL: http://${IDENTITY_NETWORK_ALIAS}:${INTERNAL_IDENTITY_PORT}
+      IDENTITY_URL: http://localhost:${IDENTITY_PORT}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+    restart: always
+    
+  identity:
+    container_name: famyok-identity
+    image: famyok.identity
+    depends_on:
+      - db
+    ports:
+      - ${IDENTITY_PORT}:${INTERNAL_IDENTITY_PORT}
+    build:
+      context: Famyok.IdentityProvider
+    networks:
+      famyok-network:
+        aliases:
+          - ${IDENTITY_NETWORK_ALIAS}
+    environment:
+      ASPNETCORE_URLS: http://0.0.0.0:${INTERNAL_IDENTITY_PORT}
+      API_URL: http://${API_NETWORK_ALIAS}:${INTERNAL_API_PORT}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+    restart: always
+  
+  db:
+    container_name: famyok-db
+    image: mariadb
+    networks:
+      famyok-network:
+        aliases:
+          - db.famyok.internal
+    ports:
+      - ${DB_PORT}:${INTERNAL_DB_PORT}
+    environment:
+      MARIADB_DATABASE: ${DB_NAME}
+      MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
+    restart: always
+
+
+networks:
+  famyok-network:
+    driver: bridge

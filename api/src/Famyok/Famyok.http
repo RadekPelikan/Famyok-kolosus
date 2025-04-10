@@ -1,0 +1,6 @@
+@Famyok_HostAddress = http://localhost:5183
+
+GET {{Famyok_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

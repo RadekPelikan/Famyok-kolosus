@@ -1,0 +1,6 @@
+@Famyok.IdentityProvider_HostAddress = http://localhost:5111
+
+GET {{Famyok.IdentityProvider_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
