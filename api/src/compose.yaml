@@ -9,15 +9,12 @@
     build:
       context: Famyok
     networks:
-      famyok-network:
-        aliases:
-          - ${API_NETWORK_ALIAS}
+      - famyok-network
     environment:
-      ASPNETCORE_URLS: http://0.0.0.0:${INTERNAL_API_PORT}
-#      IDENTITY_URL: http://${IDENTITY_NETWORK_ALIAS}:${INTERNAL_IDENTITY_PORT}
+      ASPNETCORE_URLS: http://localhost:${INTERNAL_API_PORT}
       IDENTITY_URL: http://localhost:${IDENTITY_PORT}
-      DB_HOST: ${DB_HOST}
-      DB_PORT: ${DB_PORT}
+      DB_SERVER: ${DB_SERVER}
+      DB_PORT: ${INTERNAL_DB_PORT}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: ${DB_NAME}
@@ -33,14 +30,12 @@
     build:
       context: Famyok.IdentityProvider
     networks:
-      famyok-network:
-        aliases:
-          - ${IDENTITY_NETWORK_ALIAS}
+      - famyok-network
     environment:
-      ASPNETCORE_URLS: http://0.0.0.0:${INTERNAL_IDENTITY_PORT}
-      API_URL: http://${API_NETWORK_ALIAS}:${INTERNAL_API_PORT}
-      DB_HOST: ${DB_HOST}
-      DB_PORT: ${DB_PORT}
+      ASPNETCORE_URLS: http://localhost:${INTERNAL_IDENTITY_PORT}
+      API_URL: http://localhost:${INTERNAL_API_PORT}
+      DB_SERVER: ${DB_SERVER}
+      DB_PORT: ${INTERNAL_DB_PORT}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: ${DB_NAME}
@@ -50,17 +45,69 @@
     container_name: famyok-db
     image: mariadb
     networks:
-      famyok-network:
-        aliases:
-          - db.famyok.internal
+      - famyok-network
     ports:
       - ${DB_PORT}:${INTERNAL_DB_PORT}
     environment:
       MARIADB_DATABASE: ${DB_NAME}
       MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
     restart: always
+  
+  
+  loki:
+    container_name: famyok-logging-loki
+    image: grafana/loki:latest
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - famyok-network
+
+  promtail:
+    container_name: famyok-logging-promtail
+    image: grafana/promtail:latest
+    volumes:
+      - /var/log:/var/log
+    command: -config.file=/etc/promtail/config.yml
+    networks:
+      - famyok-network
+
+  grafana:
+    container_name: famyok-logging-grafana
+    environment:
+      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_FEATURE_TOGGLES_ENABLE=alertingSimplifiedRouting,alertingQueryAndExpressionsStepMode
+    entrypoint:
+      - sh
+      - -euc
+      - |
+        mkdir -p /etc/grafana/provisioning/datasources
+        cat <<EOF > /etc/grafana/provisioning/datasources/ds.yaml
+        apiVersion: 1
+        datasources:
+        - name: Loki
+          type: loki
+          access: proxy 
+          orgId: 1
+          url: http://loki:3100
+          basicAuth: false
+          isDefault: true
+          version: 1
+          editable: false
+        EOF
+        /run.sh
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    networks:
+      - famyok-network
 
 
 networks:
   famyok-network:
     driver: bridge
+volumes:
+  grafana-data:
+    

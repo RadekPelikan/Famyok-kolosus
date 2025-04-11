@@ -16,8 +16,10 @@ public class DummyApiController : ControllerBase
     }
 
     [HttpGet]
-    public DummyApiResponse GetDummy(DummyApiRequest dto)
+    public DummyApiResponse GetDummy()
     {
+        _logger.LogInformation("ahoj");
+        _logger.LogInformation("bye");
         return new DummyApiResponse();
     }
 

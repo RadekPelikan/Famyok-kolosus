@@ -1,28 +1,25 @@
-using Famyok.InfrastructureLayer.Constants;
-using Microsoft.OpenApi.Models;
+using Famyok.InfrastructureLayer.Extensions;
+using Famyok.InfrastructureLayer.Options;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder
+    .AddConfigurations()
+    .AddCorsAllowFamyok();
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services
+    .AddControllers();
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowFamyokOrigins", policy =>
-    {
-        policy.WithOrigins(DevelopmentConstants.FAMYOK_URLS);
-    });
-});
-
-builder.Services.AddSwaggerGen(options =>
-{
-    options.SwaggerDoc("v1", new OpenApiInfo() { Title = "Famyok Identity provider", Version = "v1" });
-});
+builder.Services.AddSwaggerDoc("Famyok Identity provider", "v1");
 
 var app = builder.Build();
 
+var connectionOptions = app.Services.GetRequiredService<IOptions<ConnectionOptions>>().Value;
+
 app.UseCors("AllowFamyokOrigins");
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -35,4 +32,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run(DevelopmentConstants.IDENTITY_URL);
+app.Run(connectionOptions.Identity.Url);

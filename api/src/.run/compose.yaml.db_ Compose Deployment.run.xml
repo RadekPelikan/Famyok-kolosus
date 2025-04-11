@@ -2,6 +2,7 @@
   <configuration default="false" name="compose.yaml.db: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" server-name="Docker">
     <deployment type="docker-compose.yml">
       <settings>
+        <option name="composeProjectName" value="famyok" />
         <option name="envFilePath" value="" />
         <option name="services">
           <list>
@@ -9,6 +10,7 @@
           </list>
         </option>
         <option name="sourceFilePath" value="compose.yaml" />
+        <option name="upForceRecreate" value="true" />
       </settings>
     </deployment>
     <EXTENSION ID="com.jetbrains.rider.docker.debug" isFastModeEnabled="true" isSslEnabled="false" />
