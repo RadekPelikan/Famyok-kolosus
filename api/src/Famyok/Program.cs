@@ -3,8 +3,6 @@ using Famyok.InfrastructureLayer.Options;
 using Microsoft.Extensions.Options;
 using Serilog;
 using Serilog.Formatting.Json;
-using Serilog.Sinks.Grafana.Loki;
-
 
 try
 {
@@ -43,28 +41,6 @@ try
     }
 
     app.UseHttpsRedirection();
-
-    // Add Serilog Request Logging Middleware
-    app.UseSerilogRequestLogging(options =>
-    {
-        options.MessageTemplate = "Handled {RequestMethod} {RequestPath} responded with {StatusCode}";
-
-        options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
-        {
-            // Enrich with custom labels
-            diagnosticContext.Set("RequestHost", httpContext.Request.Host.ToString());
-            diagnosticContext.Set("ResponseStatusCode", httpContext.Response.StatusCode);
-
-            // You can add custom labels to differentiate request types, e.g., "log_type" for categorizing
-            diagnosticContext.Set("log_type", "request");
-
-            // Optionally, categorize as "error" for certain conditions
-            if (httpContext.Response.StatusCode >= 400)
-            {
-                diagnosticContext.Set("log_type", "error");
-            }
-        };
-    });
 
     app.UseAuthorization();
 
