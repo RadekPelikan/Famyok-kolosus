@@ -12,8 +12,6 @@ try
         .AddConfigurations()
         .AddSerilog();
 
-    Log.Information("Starting up");
-
     builder
         .AddCorsAllowFamyok();
 
@@ -38,6 +36,8 @@ try
                 .AddSwaggerEndpoint(connectionOptions.Api, "Famyok API v1")
                 .AddSwaggerEndpoint(connectionOptions.Identity, "Identity API v1");
         });
+        
+        Log.Information($"View swagger on {connectionOptions.Api.Url}/swagger");
     }
 
     app.UseHttpsRedirection();
@@ -45,7 +45,8 @@ try
     app.UseAuthorization();
 
     app.MapControllers();
-
+    
+    Log.Information($"Running on {connectionOptions.Api.Url}");
     app.Run(connectionOptions.Api.Url);
 }
 catch (Exception ex)
