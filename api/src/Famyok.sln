@@ -1,17 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Famyok", "Famyok\Famyok.csproj", "{C27E52F8-364A-478E-A81A-287E1214953B}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A460A122-815A-4E3A-ABAF-49DB8A3BC0B6}"
 	ProjectSection(SolutionItems) = preProject
 		compose.yaml = compose.yaml
 		.env = .env
 		..\..\README.md = ..\..\README.md
-		.gitignore = .gitignore
 		sqlc.yaml = sqlc.yaml
+		..\..\.gitignore = ..\..\.gitignore
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Famyok.IdentityProvider", "Famyok.IdentityProvider\Famyok.IdentityProvider.csproj", "{994C9F19-0917-4815-81EA-0430A5B4F89B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Famyok.InfrastructureLayer", "Famyok.InfrastructureLayer\Famyok.InfrastructureLayer.csproj", "{A0253730-B962-497C-9158-39596FEDFEE5}"
 EndProject
@@ -21,20 +17,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Famyok.DAL", "Famyok.DAL\Fa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Famyok.DAL.Abstraction", "Famyok.DAL.Abstraction\Famyok.DAL.Abstraction.csproj", "{9D9ACFE1-F86D-461D-8A28-DBF7F9261318}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Famyok.App", "Famyok.App\Famyok.App.csproj", "{5D66505C-1B8D-4968-BA28-4C1DAF7C6FE3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C27E52F8-364A-478E-A81A-287E1214953B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C27E52F8-364A-478E-A81A-287E1214953B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C27E52F8-364A-478E-A81A-287E1214953B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C27E52F8-364A-478E-A81A-287E1214953B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{994C9F19-0917-4815-81EA-0430A5B4F89B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{994C9F19-0917-4815-81EA-0430A5B4F89B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{994C9F19-0917-4815-81EA-0430A5B4F89B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{994C9F19-0917-4815-81EA-0430A5B4F89B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A0253730-B962-497C-9158-39596FEDFEE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A0253730-B962-497C-9158-39596FEDFEE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0253730-B962-497C-9158-39596FEDFEE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -51,6 +41,10 @@ Global
 		{9D9ACFE1-F86D-461D-8A28-DBF7F9261318}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9D9ACFE1-F86D-461D-8A28-DBF7F9261318}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9D9ACFE1-F86D-461D-8A28-DBF7F9261318}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D66505C-1B8D-4968-BA28-4C1DAF7C6FE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D66505C-1B8D-4968-BA28-4C1DAF7C6FE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D66505C-1B8D-4968-BA28-4C1DAF7C6FE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D66505C-1B8D-4968-BA28-4C1DAF7C6FE3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection

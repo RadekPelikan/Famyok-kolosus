@@ -163,6 +163,21 @@ Utilize one of these:
 
 ## New Features
 
+### Optimizations
+
+- image optimizations and compression, correct file format (webp I think) and compressing images: [github](https://github.com/dlemstra/Magick.NET)
+
+### Discord community suggestions
+
+#### Moon cycles
+
+- Visualization of a moon phases on a main page
+- Moon moving across the top
+
+##### Moon cycles inside of rooms
+
+- Chats will have feature so storytellers would be able to control it
+
 ### Discord Integration
 
 ### AI
