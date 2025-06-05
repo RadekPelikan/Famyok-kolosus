@@ -1,0 +1,11 @@
+@import 'tailwindcss';
+
+.marked {
+	h1 {
+		@apply bg-red-700;
+	}
+
+	p {
+		@apply bg-amber-400;
+	}
+}
